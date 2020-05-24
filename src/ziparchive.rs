@@ -30,6 +30,8 @@ struct LocalFileHeader {
 }
 
 /// The central directory record (CDR) is an expanded form of the local header
+#[repr(C, packed)]
+#[derive(Debug, Copy, Clone)]
 struct CentralDirectoryFileHeader {
     /// The Central Directory Contains multiple CDRs     
                                         // OFFSETS
@@ -69,8 +71,8 @@ struct EndOfCentralDirectoryRecord {
     total_cdr: u16,                     // 10
     size_of_cdr: u32,                   // 12       Size of the Central Directory in Bytes
     offset_cdr_start: u32,              // 16       Offset from the start of the archive where the CentralDirectory starts (in bytes, obvi)
-    comment_length: u16,                 // 20       (n)
-    // comment: Vec<u8>
+    comment_length: u16,                // 20       (n)
+    // comment: Vec<u8>                 Moved to wrapper EofRecord
 }
 
 struct EofRecord {
@@ -102,6 +104,7 @@ impl EofRecord {
 impl EndOfCentralDirectoryRecord {
     /// Reads a binary array into a struct, using the C representaion
     /// Returns a offset of where the reading ended
+    /// TODO: Make it actually modify self, rn it just loads it & prints it.
     /// https://stackoverflow.com/questions/25410028/how-to-read-a-struct-from-a-file-in-rust
     pub fn load_data(&mut self, mut file: std::fs::File, offset_starting: u64) -> u64{
         println!("Loading from offset: {}", offset_starting);
