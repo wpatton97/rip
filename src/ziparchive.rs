@@ -50,15 +50,16 @@ struct CentralDirectoryFileHeader {
     internal_file_attributes: u16,      // 36
     external_file_attributes: u32,      // 38
     relative_offset_localheader: u32,   // 42       Relative offset of local file header. This is the number of bytes between the start of the first disk on which the file occurs, and the start of the local file header.
-    filename: Vec<u8>,                  // 46
-    extra_field: Vec<u8>,               // 46 + n
-    file_comment: Vec<u8>               // 46 + n + m
+    // filename: Vec<u8>,                  // 46
+    // extra_field: Vec<u8>,               // 46 + n
+    // file_comment: Vec<u8>               // 46 + n + m
 }
 
 /// After all the central directory entries comes the end of central directory (EOCD) record, which marks the end of the ZIP file
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
 struct EndOfCentralDirectoryRecord {
+
 
                                         // OFFSETS
     magic_number: u32,                  // 0        0x06054b50
@@ -72,18 +73,46 @@ struct EndOfCentralDirectoryRecord {
     // comment: Vec<u8>
 }
 
+struct EofRecord {
+    static_data: EndOfCentralDirectoryRecord,
+    start_offset: u64,
+    end_offset: u64,
+    comment: Vec<u8>,
+}
+
+impl EofRecord {
+    pub fn new(mut file: std::fs::File, offset_starting: u64) -> EofRecord {
+        let mut static_data = EndOfCentralDirectoryRecord::new();
+        let end_offset = static_data.load_data(file, offset_starting);
+        let mut commentBuf = vec![0; static_data.comment_length as usize];
+
+        file.seek(SeekFrom::Start(end_offset));
+        file.read(&mut commentBuf);
+
+        return EofRecord{
+            static_data: static_data,
+            start_offset: offset_starting,
+            end_offset: end_offset,
+            comment: commentBuf
+        }
+        
+    }
+}
+
 impl EndOfCentralDirectoryRecord {
     /// Reads a binary array into a struct, using the C representaion
+    /// Returns a offset of where the reading ended
     /// https://stackoverflow.com/questions/25410028/how-to-read-a-struct-from-a-file-in-rust
-    pub fn load_data(&mut self, mut file: std::fs::File, offset_starting: u64, size: u64){
+    pub fn load_data(&mut self, mut file: std::fs::File, offset_starting: u64) -> u64{
         println!("Loading from offset: {}", offset_starting);
-        let mut struct_data = vec![0u8; size as usize];
+        let data_size = mem::size_of::<EndOfCentralDirectoryRecord>();
+        let mut struct_data = vec![0u8; data_size];
 
         file.seek(SeekFrom::Start(offset_starting)).unwrap();
         file.read(&mut struct_data).unwrap();
 
         let mut data: EndOfCentralDirectoryRecord = unsafe {mem::zeroed()};
-        let data_size = mem::size_of::<EndOfCentralDirectoryRecord>();
+        
 
         let mut c = Cursor::new(struct_data);
 
@@ -94,17 +123,7 @@ impl EndOfCentralDirectoryRecord {
 
         println!("Struct: {:#?}", data);
 
-
-        // let mut magic_buf: [u8; 4] = [0x0; 4];
-        // file.seek(SeekFrom::Start(offset_starting)).unwrap();
-        // file.read(&mut magic_buf).unwrap();
-        // println!("{:?}", magic_buf);
-        // unsafe {
-        //     println!("{}", mem::transmute::<[u8; 4], u32>(magic_buf));
-        // }
-        
-        // println!("Got magic number: {}", self.magic_number);
-
+        return offset_starting + data_size as u64;
     }
 
     pub fn new() -> EndOfCentralDirectoryRecord{
