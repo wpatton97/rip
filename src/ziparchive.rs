@@ -73,6 +73,8 @@ struct EndOfCentralDirectoryRecord {
 }
 
 impl EndOfCentralDirectoryRecord {
+    /// Reads a binary array into a struct, using the C representaion
+    /// https://stackoverflow.com/questions/25410028/how-to-read-a-struct-from-a-file-in-rust
     pub fn load_data(&mut self, mut file: std::fs::File, offset_starting: u64, size: u64){
         println!("Loading from offset: {}", offset_starting);
         let mut struct_data = vec![0u8; size as usize];
