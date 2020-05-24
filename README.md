@@ -1,1 +1,1 @@
-## RIP - Rust Zip Archiver
+## RIP - Rust (Z)ip Archiver
