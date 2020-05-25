@@ -342,6 +342,6 @@ impl ZipArchive<'_> {
         println!("Data1 file: {}", filename1);
         println!("Data2: {:#?}", y);
         let filename2 = std::str::from_utf8(&y.file_name_data).expect("Couldn't convert bytes to utf8");
-        println!("Data1 file: {}", filename2);
+        println!("Data2 file: {}", filename2);
     }
 }
