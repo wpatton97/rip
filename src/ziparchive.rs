@@ -1,4 +1,4 @@
-use std::error::Error;
+#![allow(dead_code)]
 use std::fs::File;
 use std::path::Path;
 use std::io::Read;
@@ -75,6 +75,8 @@ struct EndOfCentralDirectoryRecord {
     // comment: Vec<u8>                 Moved to wrapper EofRecord
 }
 
+#[derive(Debug, Clone)]
+/// Wrapper around EndOfCentralDirectoryRecord that allows us to manually fill the variably sized data
 struct EofRecord {
     static_data: EndOfCentralDirectoryRecord,
     start_offset: u64,
@@ -83,19 +85,18 @@ struct EofRecord {
 }
 
 impl EofRecord {
-    pub fn new(mut file: std::fs::File, offset_starting: u64) -> EofRecord {
+    pub fn new(mut file: &std::fs::File, offset_starting: u64) -> EofRecord {
         let mut static_data = EndOfCentralDirectoryRecord::new();
-        let end_offset = static_data.load_data(file, offset_starting);
-        let mut commentBuf = vec![0; static_data.comment_length as usize];
-
-        file.seek(SeekFrom::Start(end_offset));
-        file.read(&mut commentBuf);
+        let end_offset = static_data.load_data(&mut file, offset_starting);
+        let mut comment_buf = vec![0; static_data.comment_length as usize];
+        file.seek(SeekFrom::Start(end_offset)).expect("Couldn't seek to EOF comment");
+        file.read(&mut comment_buf).expect("Error reading EOF comment");
 
         return EofRecord{
             static_data: static_data,
             start_offset: offset_starting,
             end_offset: end_offset,
-            comment: commentBuf
+            comment: comment_buf
         }
         
     }
@@ -104,10 +105,9 @@ impl EofRecord {
 impl EndOfCentralDirectoryRecord {
     /// Reads a binary array into a struct, using the C representaion
     /// Returns a offset of where the reading ended
-    /// TODO: Make it actually modify self, rn it just loads it & prints it.
     /// https://stackoverflow.com/questions/25410028/how-to-read-a-struct-from-a-file-in-rust
-    pub fn load_data(&mut self, mut file: std::fs::File, offset_starting: u64) -> u64{
-        println!("Loading from offset: {}", offset_starting);
+    pub fn load_data(&mut self, mut file: &std::fs::File, offset_starting: u64) -> u64{
+        println!("Loading EOF Record from offset: {:#X}", offset_starting);
         let data_size = mem::size_of::<EndOfCentralDirectoryRecord>();
         let mut struct_data = vec![0u8; data_size];
 
@@ -124,7 +124,14 @@ impl EndOfCentralDirectoryRecord {
             c.read_exact(data_slice).unwrap();
         }
 
-        println!("Struct: {:#?}", data);
+        self.magic_number = data.magic_number;
+        self.number_of_current_disk = data.number_of_current_disk;
+        self.disk_where_cdr_starts = data.disk_where_cdr_starts;
+        self.num_cdr_on_disk = data.num_cdr_on_disk;
+        self.total_cdr = data.total_cdr;
+        self.size_of_cdr = data.size_of_cdr;
+        self.offset_cdr_start = data.offset_cdr_start;
+        self.comment_length = data.comment_length;
 
         return offset_starting + data_size as u64;
     }
@@ -146,7 +153,7 @@ impl EndOfCentralDirectoryRecord {
 pub struct ZipArchive {
     local_file_data: Vec<LocalFileHeader>,
     central_records: Vec<CentralDirectoryFileHeader>,
-    eof_record: EndOfCentralDirectoryRecord
+    eof_record: EofRecord
 }
 
 
@@ -155,51 +162,40 @@ impl ZipArchive {
         println!("New ZipArchive! {}", filename);
         let path = Path::new(filename);
         let mut file = match File::open(path) {
-            Err(why) => panic!("Couldn't open {}: {}", path.display(), why.description()),
+            Err(why) => panic!("Couldn't open {}: {}", path.display(), why.to_string()),
             Ok(file) => file
         };
 
         let last_pos = match file.seek(SeekFrom::End(0)) {
-            Err(why) => panic!("Couldn't seek! {}", why.description()),
+            Err(why) => panic!("Couldn't seek! {}", why.to_string()),
             Ok(pos) => pos
         };
 
         let eof_record_num:[u8; 4] = [0x50, 0x4b, 0x05, 0x06]; // 0x06054b50 Reversed for lil-endian
 
-        println!("Seek'd to the last position which is: {}", last_pos);
-
         let mut current_index: i64 = 1;
-        let mut eofdirectory_offset: u64 = 0;
-        while current_index < last_pos as i64 {
+        while current_index < last_pos as i64 { // basically, this loop moves the read position back 1 byte at a time from the end, until our
+            // four-byte buffer looks like the eof_record_num, which means we have found the start of the EOF record.
             let mut buffer: [u8; 4] = [0x0; 4];
             file.seek(SeekFrom::End(-current_index)).unwrap();
             file.read(&mut buffer[..]).unwrap();
             if &eof_record_num[..] == &buffer[..] {
-                println!("WE FOUND IT! {:?}", buffer);
+                println!("Found magic number for EOF structure at offset {:#X}", last_pos-current_index as u64);
                 break;
             }
             current_index = current_index + 1;
         }
 
-        eofdirectory_offset = last_pos - current_index as u64;
-        let mut eof_data = EndOfCentralDirectoryRecord::new();
-        let size = last_pos - eofdirectory_offset;
-        eof_data.load_data(file, eofdirectory_offset, size);
-
+        let eofdirectory_offset: u64 = last_pos - current_index as u64;
 
         return ZipArchive{
             local_file_data: Vec::new(),
             central_records: Vec::new(),
-            eof_record: EndOfCentralDirectoryRecord{
-                magic_number: 0x06054b50,
-                number_of_current_disk: 0,
-                disk_where_cdr_starts: 0,
-                num_cdr_on_disk: 0,
-                total_cdr: 0,
-                size_of_cdr: 0,
-                offset_cdr_start: 0,
-                comment_length: 0
-            }
+            eof_record: EofRecord::new(&mut file, eofdirectory_offset)
         };
+    }
+
+    pub fn print_eof(self){
+        println!("EofRecord: {:#?}", self.eof_record);
     }
 }

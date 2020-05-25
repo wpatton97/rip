@@ -1,6 +1,6 @@
 mod ziparchive;
 
 fn main() {
-    ziparchive::ZipArchive::new("./resources/testarchive.zip");
-    println!("Hello, world!");
+    let y = ziparchive::ZipArchive::new("./resources/testarchive.zip");
+    y.print_eof();
 }
