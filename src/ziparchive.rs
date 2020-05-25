@@ -23,10 +23,63 @@ struct LocalFileHeader {
     uncompressed_size: u32,         // 22
     file_name_length: u16,          // 26 (n)
     extra_field_length: u16,        // 28 (m)
-    file_name: Vec<u8>,             // 30
-    extra_field: Vec<u8>,           // 30 + n
-    compressed_data: Vec<u8>
+    // file_name: Vec<u8>,             // 30
+    // extra_field: Vec<u8>,           // 30 + n
+    // compressed_data: Vec<u8>
     // https://en.wikipedia.org/wiki/Zip_(file_format)
+}
+
+
+impl LocalFileHeader{
+    pub fn new() -> LocalFileHeader {
+        LocalFileHeader {
+            magic_number: 0,
+            version_needed: 0,
+            spacer_unused: 0,
+            compression_method: 0,
+            last_modify_time: 0,
+            last_modify_date: 0,
+            crc32_uncompressed: 0,
+            compressed_size: 0,
+            uncompressed_size: 0,
+            file_name_length: 0,
+            extra_field_length: 0
+        }
+    }
+
+    pub fn load_data(&mut self, mut file: &std::fs::File, start_offset: u64) -> u64 {
+        println!("Loading LocalFileHeader from offset: {:#X}", start_offset);
+        let data_size = mem::size_of::<LocalFileHeader>();
+        let mut struct_data = vec![0u8; data_size];
+
+        file.seek(SeekFrom::Start(start_offset)).expect("Could not seek to location.");
+        file.read(&mut struct_data).expect("Couldn't read.");
+
+        let mut data: LocalFileHeader = LocalFileHeader::new();
+        let mut c = Cursor::new(struct_data);
+
+        unsafe {
+            let data_slice = slice::from_raw_parts_mut(&mut data as *mut _ as *mut u8, data_size);
+            c.read_exact(data_slice).expect("Couldn't read from struct data");
+        }
+
+        // TODO: Add check for correct magic num/sig here
+
+        self.magic_number = data.magic_number;
+        self.version_needed = data.version_needed;
+        self.spacer_unused = data.spacer_unused;
+        self.compression_method = data.compression_method;
+        self.last_modify_time = data.last_modify_time;
+        self.last_modify_date = data.last_modify_date;
+        self.crc32_uncompressed = data.crc32_uncompressed;
+        self.compressed_size = data.compressed_size;
+        self.uncompressed_size = data.uncompressed_size;
+        self.file_name_length = data.file_name_length;
+        self.extra_field_length = data.extra_field_length;
+
+
+        return start_offset + data_size as u64;
+    }
 }
 
 /// The central directory record (CDR) is an expanded form of the local header
