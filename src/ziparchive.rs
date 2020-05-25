@@ -57,6 +57,72 @@ struct CentralDirectoryFileHeader {
     // file_comment: Vec<u8>               // 46 + n + m
 }
 
+impl CentralDirectoryFileHeader{
+    pub fn new() -> CentralDirectoryFileHeader {
+        CentralDirectoryFileHeader {
+            magic_number: 0,
+            version_made_by: 0,
+            version_needed: 0,
+            spacer_unused: 0,
+            compression_method: 0,
+            last_modify_time: 0,
+            last_modify_date: 0,
+            crc32_uncompressed: 0,
+            compressed_size: 0,
+            uncompressed_size: 0,
+            file_name_length: 0,
+            extra_field_length: 0,
+            file_comment_length: 0,
+            disk_number_source: 0,
+            internal_file_attributes: 0,
+            external_file_attributes: 0,
+            relative_offset_localheader: 0
+        }
+    }
+
+    /// Loads data into a CentralDirecotyFileHeader
+    /// Returns where reading stopped. (offset + size of struct)
+    pub fn load_data(&mut self, mut file: &std::fs::File, start_offset: u64) -> u64{
+        println!("Loading CDFR from offset: {:#X}", start_offset);
+        let data_size = mem::size_of::<CentralDirectoryFileHeader>();
+        let mut struct_data = vec![0u8; data_size];
+
+        file.seek(SeekFrom::Start(start_offset)).expect("Couldn't seek to start of CDFR");
+        file.read(&mut struct_data).expect("Couldn't read from file.");
+
+        let mut data: CentralDirectoryFileHeader = unsafe { mem::zeroed() };
+
+        let mut c = Cursor::new(struct_data);
+
+        unsafe {
+            let data_slice = slice::from_raw_parts_mut(&mut data as *mut _ as *mut u8, data_size);
+            c.read_exact(data_slice).expect("Couldn't read slice data into struct.");
+        }
+
+        // println!("Got magic number: {:#X}", data.magic_number);
+
+        self.magic_number = data.magic_number;
+        self.version_made_by = data.version_made_by;
+        self.version_needed = data.version_needed;
+        self.spacer_unused = data.spacer_unused;
+        self.compression_method = data.compression_method;
+        self.last_modify_time = data.last_modify_time;
+        self.last_modify_date = data.last_modify_date;
+        self.crc32_uncompressed = data.crc32_uncompressed;
+        self.compressed_size = data.compressed_size;
+        self.uncompressed_size = data.uncompressed_size;
+        self.file_name_length = data.file_name_length;
+        self.extra_field_length = data.extra_field_length;
+        self.file_comment_length = data.file_comment_length;
+        self.disk_number_source = data.disk_number_source;
+        self.internal_file_attributes = data.internal_file_attributes;
+        self.external_file_attributes = data.external_file_attributes;
+        self.relative_offset_localheader = data.relative_offset_localheader;
+
+        return start_offset + data_size as u64;
+    }
+}
+
 /// After all the central directory entries comes the end of central directory (EOCD) record, which marks the end of the ZIP file
 #[repr(C, packed)]
 #[derive(Debug, Copy, Clone)]
@@ -111,8 +177,8 @@ impl EndOfCentralDirectoryRecord {
         let data_size = mem::size_of::<EndOfCentralDirectoryRecord>();
         let mut struct_data = vec![0u8; data_size];
 
-        file.seek(SeekFrom::Start(offset_starting)).unwrap();
-        file.read(&mut struct_data).unwrap();
+        file.seek(SeekFrom::Start(offset_starting)).expect("Couldn't seek to start of EOF Record");
+        file.read(&mut struct_data).expect("Couldn't read from file.");
 
         let mut data: EndOfCentralDirectoryRecord = unsafe {mem::zeroed()};
         
@@ -121,7 +187,7 @@ impl EndOfCentralDirectoryRecord {
 
         unsafe {
             let data_slice = slice::from_raw_parts_mut(&mut data as *mut _ as *mut u8, data_size);
-            c.read_exact(data_slice).unwrap();
+            c.read_exact(data_slice).expect("Couldn't read data into struct.");
         }
 
         self.magic_number = data.magic_number;
@@ -150,14 +216,15 @@ impl EndOfCentralDirectoryRecord {
     }
 }
 
-pub struct ZipArchive {
+pub struct ZipArchive<'a> {
+    filename: &'a str,
     local_file_data: Vec<LocalFileHeader>,
     central_records: Vec<CentralDirectoryFileHeader>,
     eof_record: EofRecord
 }
 
 
-impl ZipArchive {
+impl ZipArchive<'_> {
     pub fn new(filename: &str) -> ZipArchive{
         println!("New ZipArchive! {}", filename);
         let path = Path::new(filename);
@@ -189,6 +256,7 @@ impl ZipArchive {
         let eofdirectory_offset: u64 = last_pos - current_index as u64;
 
         return ZipArchive{
+            filename: filename,
             local_file_data: Vec::new(),
             central_records: Vec::new(),
             eof_record: EofRecord::new(&mut file, eofdirectory_offset)
@@ -197,5 +265,19 @@ impl ZipArchive {
 
     pub fn print_eof(self){
         println!("EofRecord: {:#?}", self.eof_record);
+    }
+
+    pub fn test_cdr_read(self){
+        let start_offset = self.eof_record.static_data.offset_cdr_start;
+
+        let path = Path::new(self.filename);
+        let mut file = match File::open(path) {
+            Err(why) => panic!("Couldn't open {}: {}", path.display(), why.to_string()),
+            Ok(file) => file
+        };
+
+        let mut x = CentralDirectoryFileHeader::new();
+        let _done = x.load_data(&mut file, start_offset as u64);
+        println!("Data1: {:#?}", x);
     }
 }
