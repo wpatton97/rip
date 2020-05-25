@@ -99,6 +99,10 @@ impl CentralDirectoryFileHeader{
             c.read_exact(data_slice).expect("Couldn't read slice data into struct.");
         }
 
+        if data.magic_number != 33639248{
+            println!("\tError!! Magic number incorrect!");
+        }
+
         // println!("Got magic number: {:#X}", data.magic_number);
 
         self.magic_number = data.magic_number;
@@ -120,6 +124,59 @@ impl CentralDirectoryFileHeader{
         self.relative_offset_localheader = data.relative_offset_localheader;
 
         return start_offset + data_size as u64;
+    }
+}
+
+/// A wrapper around CentralDirectoryFileHeader so that we can pac the static stuff, and then manually fill the rest.
+/// Central Directory File Header Record (CDFHR)
+#[derive(Debug, Clone)]
+struct CDFHR {
+    static_data: CentralDirectoryFileHeader,
+    start_offset: u64,
+    end_offset: u64,
+    file_name_data: Vec<u8>,
+    extra_field_data: Vec<u8>,
+    file_comment_data: Vec<u8>
+}
+
+impl CDFHR {
+    pub fn new() -> CDFHR {
+        CDFHR {
+            static_data: CentralDirectoryFileHeader::new(),
+            start_offset: 0,
+            end_offset: 0,
+            file_name_data: Vec::new(),
+            extra_field_data: Vec::new(),
+            file_comment_data: Vec::new()
+        }
+    }
+
+    /// Loads the object calling it.
+    /// Returns a u64 containg the end position after reading.
+    pub fn load_data(&mut self, mut file: &std::fs::File, start_offset: u64) -> u64{
+        let mut static_data = CentralDirectoryFileHeader::new();
+        let end_static_offset = static_data.load_data(&mut file, start_offset);
+
+        
+
+        let mut file_name_buf = vec![0; static_data.file_name_length as usize];
+        let mut extra_field_buf = vec![0; static_data.extra_field_length as usize];
+        let mut file_comment_buf = vec![0; static_data.file_comment_length as usize];
+
+        file.seek(SeekFrom::Start(end_static_offset)).expect("Couldn't seek to end of static offset");
+
+        file.read(&mut file_name_buf).expect("Couldn't read filename");
+        file.read(&mut extra_field_buf).expect("Couldn't read extra field");
+        file.read(&mut file_comment_buf).expect("Couldn't read file comment");
+
+        self.static_data = static_data;
+        self.start_offset = start_offset;
+        self.end_offset = end_static_offset + static_data.file_name_length as u64 + static_data.file_comment_length as u64 + static_data.extra_field_length as u64;
+        self.file_name_data = file_name_buf;
+        self.extra_field_data = extra_field_buf;
+        self.file_comment_data = file_comment_buf;
+
+        return self.end_offset;
     }
 }
 
@@ -276,8 +333,15 @@ impl ZipArchive<'_> {
             Ok(file) => file
         };
 
-        let mut x = CentralDirectoryFileHeader::new();
+        let mut x = CDFHR::new();
+        let mut y = CDFHR::new();
         let _done = x.load_data(&mut file, start_offset as u64);
+        let _done2 = y.load_data(&mut file, _done as u64);
         println!("Data1: {:#?}", x);
+        let filename1 = std::str::from_utf8(&x.file_name_data).expect("Couldn't convert bytes to utf8");
+        println!("Data1 file: {}", filename1);
+        println!("Data2: {:#?}", y);
+        let filename2 = std::str::from_utf8(&y.file_name_data).expect("Couldn't convert bytes to utf8");
+        println!("Data1 file: {}", filename2);
     }
 }
