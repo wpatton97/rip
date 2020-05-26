@@ -9,6 +9,8 @@ use std::mem;
 use std::io::SeekFrom;
 
 /// Marks the start of a file, and provides the uncompressed data
+#[repr(C, packed)]
+#[derive(Debug, Copy, Clone)]
 struct LocalFileHeader {            
     
                                     // OFFSETS:
@@ -79,6 +81,57 @@ impl LocalFileHeader{
 
 
         return start_offset + data_size as u64;
+    }
+}
+
+
+struct LocalFile {
+    static_data: LocalFileHeader,
+    data_start_offset: u64,
+    file_name_data: Vec<u8>,
+    extra_field: Vec<u8>,
+    compressed_data: Vec<u8>
+}
+
+impl LocalFile {
+    pub fn new() -> LocalFile {
+        LocalFile {
+            static_data: LocalFileHeader::new(),
+            data_start_offset: 0,
+            file_name_data: Vec::new(),
+            extra_field: Vec::new(),
+            compressed_data: Vec::new()
+        }
+    }
+
+    /// Load metadata
+    /// Returns the offset of the end (start_offset + static_data size + compressed_data_size)
+    pub fn load_metadata(&mut self, mut file: &std::fs::File, start_offset: u64) -> u64 {
+        let mut static_data = LocalFileHeader::new();
+        let end_o_static_data = static_data.load_data(&mut file, start_offset);
+
+        let mut file_name = vec![0; static_data.file_name_length as usize];
+        file.seek(SeekFrom::Start(end_o_static_data)).expect("Couldn't seek!");
+        file.read(&mut file_name).expect("Couldn't read");
+
+        let mut extra_field = vec![0; static_data.extra_field_length as usize];
+        file.read(&mut extra_field).expect("Couldn't read");
+
+        self.static_data = static_data;
+        self.data_start_offset = static_data.file_name_length as u64 + static_data.extra_field_length as u64 + end_o_static_data as u64;
+        self.file_name_data = file_name;
+        self.extra_field = extra_field;
+
+        return self.data_start_offset + self.static_data.compressed_size as u64;
+    }
+
+    /// Loads the compressed data for the current LocalFileHeader into memory
+    pub fn load_compressed_data(&mut self, mut file: &std::fs::File){
+        file.seek(SeekFrom::Start(self.data_start_offset)).expect("Couldn't seek");
+        let mut data = vec![0; self.static_data.compressed_size as usize];
+        file.read(&mut data).expect("Couldn't read");
+        self.compressed_data = data;
+
     }
 }
 
