@@ -84,7 +84,7 @@ impl LocalFileHeader{
     }
 }
 
-
+#[derive(Debug, Clone)]
 struct LocalFile {
     static_data: LocalFileHeader,
     data_start_offset: u64,
@@ -379,23 +379,20 @@ impl EndOfCentralDirectoryRecord {
     }
 }
 
+#[derive(Debug)]
 pub struct ZipArchive<'a> {
     filename: &'a str,
-    local_file_data: Vec<LocalFileHeader>,
-    central_records: Vec<CentralDirectoryFileHeader>,
+    local_file_data: Vec<LocalFile>,
+    central_records: Vec<CDFHR>,
     eof_record: EofRecord
 }
 
 
 impl ZipArchive<'_> {
-    pub fn new(filename: &str) -> ZipArchive{
-        println!("New ZipArchive! {}", filename);
-        let path = Path::new(filename);
-        let mut file = match File::open(path) {
-            Err(why) => panic!("Couldn't open {}: {}", path.display(), why.to_string()),
-            Ok(file) => file
-        };
 
+    /// Find the start offset of the EOFRecord
+    /// Returns u64 offset from start of file
+    fn find_eof_start_offset(mut file: &std::fs::File) -> u64{
         let last_pos = match file.seek(SeekFrom::End(0)) {
             Err(why) => panic!("Couldn't seek! {}", why.to_string()),
             Ok(pos) => pos
@@ -417,12 +414,44 @@ impl ZipArchive<'_> {
         }
 
         let eofdirectory_offset: u64 = last_pos - current_index as u64;
+        return eofdirectory_offset;
+    }
 
+    /// Creates a new ZipArchive given a filename
+    pub fn new(filename: &str) -> ZipArchive{
+        println!("New ZipArchive! {}", filename);
+        let path = Path::new(filename);
+        let mut file = match File::open(path) {
+            Err(why) => panic!("Couldn't open {}: {}", path.display(), why.to_string()),
+            Ok(file) => file
+        };
+
+        let eofdirectory_offset = ZipArchive::find_eof_start_offset(&mut file);
+        let eof_record = EofRecord::new(&mut file, eofdirectory_offset);
+
+        let mut cdrs: Vec<CDFHR> = Vec::new();
+        let mut last_cdfr_offset: u64 = eof_record.static_data.offset_cdr_start as u64;
+        // Load the CDR structures
+        for _ in 0..eof_record.static_data.num_cdr_on_disk{
+            let mut cdfhr = CDFHR::new();
+            let new_offset = cdfhr.load_data(&mut file, last_cdfr_offset);
+            last_cdfr_offset = new_offset;
+            cdrs.push(cdfhr);
+        }
+
+        let mut lfh: Vec<LocalFile> = Vec::new();
+        for cdr in &cdrs {
+            let mut localfile = LocalFile::new();
+            localfile.load_metadata(&mut file, cdr.static_data.relative_offset_localheader as u64);
+            lfh.push(localfile);
+        }
+
+        println!("Zip metadata loaded.");
         return ZipArchive{
             filename: filename,
-            local_file_data: Vec::new(),
-            central_records: Vec::new(),
-            eof_record: EofRecord::new(&mut file, eofdirectory_offset)
+            local_file_data: lfh,
+            central_records: cdrs,
+            eof_record: eof_record
         };
     }
 
@@ -449,5 +478,9 @@ impl ZipArchive<'_> {
         println!("Data2: {:#?}", y);
         let filename2 = std::str::from_utf8(&y.file_name_data).expect("Couldn't convert bytes to utf8");
         println!("Data2 file: {}", filename2);
+    }
+
+    pub fn print_all_data(self){
+        println!("Data: {:#?}", self);
     }
 }
