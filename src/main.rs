@@ -25,7 +25,7 @@ fn readFile(){
     let mut red = String::new();
     file.read_to_string(&mut red).expect("Couldn't read file");
 
-    let n = huffman::HuffmanNode::new("this is a huffman test");
+    let n = huffman::HuffmanNode::new(&red);
     let codes = huffman::gen_codes(&n);
 
 

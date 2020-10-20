@@ -3,7 +3,7 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
-use std::cmp::Reverse; // Used for min heap
+use std::cmp::Reverse; // Used for min heap, this fixed all my problems with all nodes on the left lol
 
 
 #[derive(Debug, Eq, Clone)]
