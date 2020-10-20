@@ -6,6 +6,7 @@ use std::path::Path;
 use std::fs::File;
 use std::io::prelude::*;
 // Zip compression_method flags: https://users.cs.jmu.edu/buchhofp/forensics/formats/pkzip.html
+// RFC for DEFLATE https://tools.ietf.org/html/rfc1951
 
 fn main() {
     let y = ziparchive::ZipArchive::new("./resources/testarchive.zip");
