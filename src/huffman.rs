@@ -36,7 +36,7 @@ impl HuffmanNode {
     pub fn new(data: &str) -> HuffmanNode {
 
         let mut freq_map = HashMap::new();
-        let mut min_heap:BinaryHeap<HuffmanNode> = BinaryHeap::new();
+        let mut min_heap:BinaryHeap<Reverse<HuffmanNode>> = BinaryHeap::new();
 
         // create a frequency map, and build each huffman node
         for c in data.chars() {
@@ -51,26 +51,26 @@ impl HuffmanNode {
         }
 
         for (_, v) in freq_map.into_iter(){
-            min_heap.push(v);
+            min_heap.push(Reverse(v));
         }
 
         while let Some(node1) = min_heap.pop() {
             let tmp_node2 = min_heap.pop();
 
             if !tmp_node2.is_some(){
-                return node1;
+                return node1.0;
             }
 
             let node2 = tmp_node2.unwrap();
 
             let merged_node = HuffmanNode {
-                freq_value: node1.freq_value + node2.freq_value,
+                freq_value: node1.0.freq_value + node2.0.freq_value,
                 value: None,
-                left: Some(Box::new(node1)),
-                right: Some(Box::new(node2))
+                left: Some(Box::new(node1.0)),
+                right: Some(Box::new(node2.0))
             };
 
-            min_heap.push(merged_node);
+            min_heap.push(Reverse(merged_node));
         }
 
         // should never get down here.
