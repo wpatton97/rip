@@ -443,6 +443,7 @@ impl ZipArchive<'_> {
         for cdr in &cdrs {
             let mut localfile = LocalFile::new();
             localfile.load_metadata(&mut file, cdr.static_data.relative_offset_localheader as u64);
+            localfile.load_compressed_data(&mut file);
             lfh.push(localfile);
         }
 
