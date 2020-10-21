@@ -10,7 +10,7 @@ pub struct HuffCode {
     pub val: char,
     pub bitlength: u8, // number of bits used
     pub code: u64,
-    pub codeStr: String
+    pub code_str: String
 }
 
 #[derive(Debug, Eq, Clone)]
@@ -85,37 +85,33 @@ impl HuffmanNode {
     }
 }
 
-pub fn gen_codes(node: &HuffmanNode) -> HashMap<char, String> {
-    let mut outMap: HashMap<char, String> = HashMap::new();
-    let mut outCodes: Vec<HuffCode> = Vec::new();
+pub fn gen_codes(node: &HuffmanNode) -> Vec<HuffCode>{
+    let mut out_codes: Vec<HuffCode> = Vec::new();
 
-    recurse_codes(node, &mut outMap, &mut outCodes, "".to_string(), 0, 0);
-    println!("{:#?}", outCodes);
-
-    return outMap;
+    recurse_codes(node, &mut out_codes, "".to_string(), 0, 0);
+    return out_codes;
 }
 
-fn recurse_codes(node: &HuffmanNode, map: &mut HashMap<char, String>, codes: &mut Vec<HuffCode>, locationStr: String, location: u64, depth: u8){
+fn recurse_codes(node: &HuffmanNode, codes: &mut Vec<HuffCode>, location_str: String, location: u64, depth: u8){
 
-    let loc_clone = locationStr.to_owned();
+    let loc_clone = location_str.to_owned();
     if node.value.is_some() {
         let char_val = node.value.unwrap();
-        map.insert(char_val, loc_clone.clone());
-        codes.push(HuffCode {val: char_val, bitlength: depth, code: location, codeStr: loc_clone.clone()})
+        codes.push(HuffCode {val: char_val, bitlength: depth, code: location, code_str: loc_clone.clone()})
     }
 
-    let left_code_str = format!("{}0", locationStr).to_owned();
-    let right_code_str = format!("{}1", locationStr).to_owned();
+    let left_code_str = format!("{}0", location_str).to_owned();
+    let right_code_str = format!("{}1", location_str).to_owned();
 
     let left_code = location << 1;
     let right_code = (location << 1) | 1;
 
     if node.left.is_some() {
-        recurse_codes(&node.left.as_ref().unwrap(), map, codes, left_code_str, left_code, depth + 1)
+        recurse_codes(&node.left.as_ref().unwrap(), codes, left_code_str, left_code, depth + 1)
     }
 
     if node.right.is_some() {
-        recurse_codes(&node.right.as_ref().unwrap(), map, codes, right_code_str, right_code, depth + 1);
+        recurse_codes(&node.right.as_ref().unwrap(), codes, right_code_str, right_code, depth + 1);
     }
 
 }
