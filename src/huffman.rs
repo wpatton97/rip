@@ -97,11 +97,6 @@ fn recurse_codes(node: &HuffmanNode, map: &mut HashMap<char, String>, location: 
     let left_code = format!("{}0", location).to_owned();
     let right_code = format!("{}1", location).to_owned();
 
-
-    println!("curLocation: {}\t{:#?}", location, node.value);
-    println!("left: {:?}", left_code);
-    println!("right: {:?}", right_code);
-
     if node.left.is_some() {
         recurse_codes(&node.left.as_ref().unwrap(), map, left_code)
     }

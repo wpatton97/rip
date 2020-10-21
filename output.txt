@@ -1,0 +1,808 @@
+New ZipArchive! ./resources/testarchive.zip
+Found magic number for EOF structure at offset 0x3994
+Loading EOF Record from offset: 0x3994
+Loading CDFR from offset: 0x3917
+Loading CDFR from offset: 0x395B
+Loading LocalFileHeader from offset: 0x0
+Loading LocalFileHeader from offset: 0x63
+Zip metadata loaded.
+curLocation: 0b0 0	None
+left: 0b0 0
+right: 0b1 1
+curLocation: 0b0 0	None
+left: 0b0 0
+right: 0b1 1
+curLocation: 0b0 0	None
+left: 0b0 0
+right: 0b1 1
+curLocation: 0b0 0	Some(
+    'e',
+)
+left: 0b0 0
+right: 0b1 1
+curLocation: 0b1 1	None
+left: 0b10 2
+right: 0b11 3
+curLocation: 0b10 2	Some(
+    'i',
+)
+left: 0b100 4
+right: 0b101 5
+curLocation: 0b11 3	Some(
+    'n',
+)
+left: 0b110 6
+right: 0b111 7
+curLocation: 0b1 1	None
+left: 0b10 2
+right: 0b11 3
+curLocation: 0b10 2	None
+left: 0b100 4
+right: 0b101 5
+curLocation: 0b100 4	None
+left: 0b1000 8
+right: 0b1001 9
+curLocation: 0b1000 8	Some(
+    'l',
+)
+left: 0b10000 16
+right: 0b10001 17
+curLocation: 0b1001 9	None
+left: 0b10010 18
+right: 0b10011 19
+curLocation: 0b10010 18	None
+left: 0b100100 36
+right: 0b100101 37
+curLocation: 0b100100 36	Some(
+    'v',
+)
+left: 0b1001000 72
+right: 0b1001001 73
+curLocation: 0b100101 37	None
+left: 0b1001010 74
+right: 0b1001011 75
+curLocation: 0b1001010 74	Some(
+    'I',
+)
+left: 0b10010100 148
+right: 0b10010101 149
+curLocation: 0b1001011 75	None
+left: 0b10010110 150
+right: 0b10010111 151
+curLocation: 0b10010110 150	Some(
+    'U',
+)
+left: 0b100101100 300
+right: 0b100101101 301
+curLocation: 0b10010111 151	Some(
+    'D',
+)
+left: 0b100101110 302
+right: 0b100101111 303
+curLocation: 0b10011 19	Some(
+    'y',
+)
+left: 0b100110 38
+right: 0b100111 39
+curLocation: 0b101 5	Some(
+    'a',
+)
+left: 0b1010 10
+right: 0b1011 11
+curLocation: 0b11 3	None
+left: 0b110 6
+right: 0b111 7
+curLocation: 0b110 6	Some(
+    'r',
+)
+left: 0b1100 12
+right: 0b1101 13
+curLocation: 0b111 7	None
+left: 0b1110 14
+right: 0b1111 15
+curLocation: 0b1110 14	Some(
+    'c',
+)
+left: 0b11100 28
+right: 0b11101 29
+curLocation: 0b1111 15	None
+left: 0b11110 30
+right: 0b11111 31
+curLocation: 0b11110 30	None
+left: 0b111100 60
+right: 0b111101 61
+curLocation: 0b111100 60	None
+left: 0b1111000 120
+right: 0b1111001 121
+curLocation: 0b1111000 120	None
+left: 0b11110000 240
+right: 0b11110001 241
+curLocation: 0b11110000 240	Some(
+    'N',
+)
+left: 0b111100000 480
+right: 0b111100001 481
+curLocation: 0b11110001 241	None
+left: 0b111100010 482
+right: 0b111100011 483
+curLocation: 0b111100010 482	Some(
+    'Y',
+)
+left: 0b1111000100 964
+right: 0b1111000101 965
+curLocation: 0b111100011 483	Some(
+    'M',
+)
+left: 0b1111000110 966
+right: 0b1111000111 967
+curLocation: 0b1111001 121	Some(
+    'G',
+)
+left: 0b11110010 242
+right: 0b11110011 243
+curLocation: 0b111101 61	None
+left: 0b1111010 122
+right: 0b1111011 123
+curLocation: 0b1111010 122	None
+left: 0b11110100 244
+right: 0b11110101 245
+curLocation: 0b11110100 244	Some(
+    'L',
+)
+left: 0b111101000 488
+right: 0b111101001 489
+curLocation: 0b11110101 245	Some(
+    'O',
+)
+left: 0b111101010 490
+right: 0b111101011 491
+curLocation: 0b1111011 123	Some(
+    'P',
+)
+left: 0b11110110 246
+right: 0b11110111 247
+curLocation: 0b11111 31	Some(
+    'g',
+)
+left: 0b111110 62
+right: 0b111111 63
+curLocation: 0b1 1	None
+left: 0b10 2
+right: 0b11 3
+curLocation: 0b10 2	None
+left: 0b100 4
+right: 0b101 5
+curLocation: 0b100 4	None
+left: 0b1000 8
+right: 0b1001 9
+curLocation: 0b1000 8	Some(
+    'o',
+)
+left: 0b10000 16
+right: 0b10001 17
+curLocation: 0b1001 9	None
+left: 0b10010 18
+right: 0b10011 19
+curLocation: 0b10010 18	Some(
+    'd',
+)
+left: 0b100100 36
+right: 0b100101 37
+curLocation: 0b10011 19	None
+left: 0b100110 38
+right: 0b100111 39
+curLocation: 0b100110 38	Some(
+    'p',
+)
+left: 0b1001100 76
+right: 0b1001101 77
+curLocation: 0b100111 39	Some(
+    'w',
+)
+left: 0b1001110 78
+right: 0b1001111 79
+curLocation: 0b101 5	None
+left: 0b1010 10
+right: 0b1011 11
+curLocation: 0b1010 10	None
+left: 0b10100 20
+right: 0b10101 21
+curLocation: 0b10100 20	None
+left: 0b101000 40
+right: 0b101001 41
+curLocation: 0b101000 40	None
+left: 0b1010000 80
+right: 0b1010001 81
+curLocation: 0b1010000 80	None
+left: 0b10100000 160
+right: 0b10100001 161
+curLocation: 0b10100000 160	None
+left: 0b101000000 320
+right: 0b101000001 321
+curLocation: 0b101000000 320	None
+left: 0b1010000000 640
+right: 0b1010000001 641
+curLocation: 0b1010000000 640	None
+left: 0b10100000000 1280
+right: 0b10100000001 1281
+curLocation: 0b10100000000 1280	Some(
+    '_',
+)
+left: 0b101000000000 2560
+right: 0b101000000001 2561
+curLocation: 0b10100000001 1281	Some(
+    ':',
+)
+left: 0b101000000010 2562
+right: 0b101000000011 2563
+curLocation: 0b1010000001 641	None
+left: 0b10100000010 1282
+right: 0b10100000011 1283
+curLocation: 0b10100000010 1282	None
+left: 0b101000000100 2564
+right: 0b101000000101 2565
+curLocation: 0b101000000100 2564	Some(
+    'V',
+)
+left: 0b1010000001000 5128
+right: 0b1010000001001 5129
+curLocation: 0b101000000101 2565	Some(
+    'K',
+)
+left: 0b1010000001010 5130
+right: 0b1010000001011 5131
+curLocation: 0b10100000011 1283	None
+left: 0b101000000110 2566
+right: 0b101000000111 2567
+curLocation: 0b101000000110 2566	None
+left: 0b1010000001100 5132
+right: 0b1010000001101 5133
+curLocation: 0b1010000001100 5132	None
+left: 0b10100000011000 10264
+right: 0b10100000011001 10265
+curLocation: 0b10100000011000 10264	None
+left: 0b101000000110000 20528
+right: 0b101000000110001 20529
+curLocation: 0b101000000110000 20528	Some(
+    '%',
+)
+left: 0b1010000001100000 41056
+right: 0b1010000001100001 41057
+curLocation: 0b101000000110001 20529	Some(
+    'ê',
+)
+left: 0b1010000001100010 41058
+right: 0b1010000001100011 41059
+curLocation: 0b10100000011001 10265	Some(
+    ']',
+)
+left: 0b101000000110010 20530
+right: 0b101000000110011 20531
+curLocation: 0b1010000001101 5133	None
+left: 0b10100000011010 10266
+right: 0b10100000011011 10267
+curLocation: 0b10100000011010 10266	None
+left: 0b101000000110100 20532
+right: 0b101000000110101 20533
+curLocation: 0b101000000110100 20532	Some(
+    '?',
+)
+left: 0b1010000001101000 41064
+right: 0b1010000001101001 41065
+curLocation: 0b101000000110101 20533	Some(
+    '\u{feff}',
+)
+left: 0b1010000001101010 41066
+right: 0b1010000001101011 41067
+curLocation: 0b10100000011011 10267	None
+left: 0b101000000110110 20534
+right: 0b101000000110111 20535
+curLocation: 0b101000000110110 20534	Some(
+    '@',
+)
+left: 0b1010000001101100 41068
+right: 0b1010000001101101 41069
+curLocation: 0b101000000110111 20535	Some(
+    '#',
+)
+left: 0b1010000001101110 41070
+right: 0b1010000001101111 41071
+curLocation: 0b101000000111 2567	None
+left: 0b1010000001110 5134
+right: 0b1010000001111 5135
+curLocation: 0b1010000001110 5134	None
+left: 0b10100000011100 10268
+right: 0b10100000011101 10269
+curLocation: 0b10100000011100 10268	Some(
+    'X',
+)
+left: 0b101000000111000 20536
+right: 0b101000000111001 20537
+curLocation: 0b10100000011101 10269	Some(
+    '!',
+)
+left: 0b101000000111010 20538
+right: 0b101000000111011 20539
+curLocation: 0b1010000001111 5135	Some(
+    '’',
+)
+left: 0b10100000011110 10270
+right: 0b10100000011111 10271
+curLocation: 0b101000001 321	Some(
+    '1',
+)
+left: 0b1010000010 642
+right: 0b1010000011 643
+curLocation: 0b10100001 161	Some(
+    'E',
+)
+left: 0b101000010 322
+right: 0b101000011 323
+curLocation: 0b1010001 81	None
+left: 0b10100010 162
+right: 0b10100011 163
+curLocation: 0b10100010 162	None
+left: 0b101000100 324
+right: 0b101000101 325
+curLocation: 0b101000100 324	Some(
+    'F',
+)
+left: 0b1010001000 648
+right: 0b1010001001 649
+curLocation: 0b101000101 325	None
+left: 0b1010001010 650
+right: 0b1010001011 651
+curLocation: 0b1010001010 650	None
+left: 0b10100010100 1300
+right: 0b10100010101 1301
+curLocation: 0b10100010100 1300	None
+left: 0b101000101000 2600
+right: 0b101000101001 2601
+curLocation: 0b101000101000 2600	Some(
+    '7',
+)
+left: 0b1010001010000 5200
+right: 0b1010001010001 5201
+curLocation: 0b101000101001 2601	Some(
+    '9',
+)
+left: 0b1010001010010 5202
+right: 0b1010001010011 5203
+curLocation: 0b10100010101 1301	Some(
+    ';',
+)
+left: 0b101000101010 2602
+right: 0b101000101011 2603
+curLocation: 0b1010001011 651	Some(
+    'C',
+)
+left: 0b10100010110 1302
+right: 0b10100010111 1303
+curLocation: 0b10100011 163	Some(
+    'T',
+)
+left: 0b101000110 326
+right: 0b101000111 327
+curLocation: 0b101001 41	Some(
+    '\n',
+)
+left: 0b1010010 82
+right: 0b1010011 83
+curLocation: 0b10101 21	None
+left: 0b101010 42
+right: 0b101011 43
+curLocation: 0b101010 42	Some(
+    'f',
+)
+left: 0b1010100 84
+right: 0b1010101 85
+curLocation: 0b101011 43	Some(
+    'm',
+)
+left: 0b1010110 86
+right: 0b1010111 87
+curLocation: 0b1011 11	Some(
+    't',
+)
+left: 0b10110 22
+right: 0b10111 23
+curLocation: 0b11 3	None
+left: 0b110 6
+right: 0b111 7
+curLocation: 0b110 6	Some(
+    ' ',
+)
+left: 0b1100 12
+right: 0b1101 13
+curLocation: 0b111 7	None
+left: 0b1110 14
+right: 0b1111 15
+curLocation: 0b1110 14	None
+left: 0b11100 28
+right: 0b11101 29
+curLocation: 0b11100 28	Some(
+    'h',
+)
+left: 0b111000 56
+right: 0b111001 57
+curLocation: 0b11101 29	None
+left: 0b111010 58
+right: 0b111011 59
+curLocation: 0b111010 58	None
+left: 0b1110100 116
+right: 0b1110101 117
+curLocation: 0b1110100 116	None
+left: 0b11101000 232
+right: 0b11101001 233
+curLocation: 0b11101000 232	None
+left: 0b111010000 464
+right: 0b111010001 465
+curLocation: 0b111010000 464	None
+left: 0b1110100000 928
+right: 0b1110100001 929
+curLocation: 0b1110100000 928	None
+left: 0b11101000000 1856
+right: 0b11101000001 1857
+curLocation: 0b11101000000 1856	None
+left: 0b111010000000 3712
+right: 0b111010000001 3713
+curLocation: 0b111010000000 3712	Some(
+    '\'',
+)
+left: 0b1110100000000 7424
+right: 0b1110100000001 7425
+curLocation: 0b111010000001 3713	Some(
+    '2',
+)
+left: 0b1110100000010 7426
+right: 0b1110100000011 7427
+curLocation: 0b11101000001 1857	Some(
+    ')',
+)
+left: 0b111010000010 3714
+right: 0b111010000011 3715
+curLocation: 0b1110100001 929	None
+left: 0b11101000010 1858
+right: 0b11101000011 1859
+curLocation: 0b11101000010 1858	Some(
+    '(',
+)
+left: 0b111010000100 3716
+right: 0b111010000101 3717
+curLocation: 0b11101000011 1859	Some(
+    'W',
+)
+left: 0b111010000110 3718
+right: 0b111010000111 3719
+curLocation: 0b111010001 465	Some(
+    'S',
+)
+left: 0b1110100010 930
+right: 0b1110100011 931
+curLocation: 0b11101001 233	None
+left: 0b111010010 466
+right: 0b111010011 467
+curLocation: 0b111010010 466	Some(
+    'R',
+)
+left: 0b1110100100 932
+right: 0b1110100101 933
+curLocation: 0b111010011 467	None
+left: 0b1110100110 934
+right: 0b1110100111 935
+curLocation: 0b1110100110 934	None
+left: 0b11101001100 1868
+right: 0b11101001101 1869
+curLocation: 0b11101001100 1868	Some(
+    '—',
+)
+left: 0b111010011000 3736
+right: 0b111010011001 3737
+curLocation: 0b11101001101 1869	None
+left: 0b111010011010 3738
+right: 0b111010011011 3739
+curLocation: 0b111010011010 3738	None
+left: 0b1110100110100 7476
+right: 0b1110100110101 7477
+curLocation: 0b1110100110100 7476	Some(
+    '“',
+)
+left: 0b11101001101000 14952
+right: 0b11101001101001 14953
+curLocation: 0b1110100110101 7477	Some(
+    '”',
+)
+left: 0b11101001101010 14954
+right: 0b11101001101011 14955
+curLocation: 0b111010011011 3739	Some(
+    '8',
+)
+left: 0b1110100110110 7478
+right: 0b1110100110111 7479
+curLocation: 0b1110100111 935	None
+left: 0b11101001110 1870
+right: 0b11101001111 1871
+curLocation: 0b11101001110 1870	Some(
+    '\"',
+)
+left: 0b111010011100 3740
+right: 0b111010011101 3741
+curLocation: 0b11101001111 1871	Some(
+    'z',
+)
+left: 0b111010011110 3742
+right: 0b111010011111 3743
+curLocation: 0b1110101 117	Some(
+    ',',
+)
+left: 0b11101010 234
+right: 0b11101011 235
+curLocation: 0b111011 59	None
+left: 0b1110110 118
+right: 0b1110111 119
+curLocation: 0b1110110 118	Some(
+    '.',
+)
+left: 0b11101100 236
+right: 0b11101101 237
+curLocation: 0b1110111 119	None
+left: 0b11101110 238
+right: 0b11101111 239
+curLocation: 0b11101110 238	None
+left: 0b111011100 476
+right: 0b111011101 477
+curLocation: 0b111011100 476	Some(
+    '-',
+)
+left: 0b1110111000 952
+right: 0b1110111001 953
+curLocation: 0b111011101 477	Some(
+    'j',
+)
+left: 0b1110111010 954
+right: 0b1110111011 955
+curLocation: 0b11101111 239	Some(
+    'k',
+)
+left: 0b111011110 478
+right: 0b111011111 479
+curLocation: 0b1111 15	None
+left: 0b11110 30
+right: 0b11111 31
+curLocation: 0b11110 30	Some(
+    's',
+)
+left: 0b111100 60
+right: 0b111101 61
+curLocation: 0b11111 31	None
+left: 0b111110 62
+right: 0b111111 63
+curLocation: 0b111110 62	None
+left: 0b1111100 124
+right: 0b1111101 125
+curLocation: 0b1111100 124	Some(
+    'b',
+)
+left: 0b11111000 248
+right: 0b11111001 249
+curLocation: 0b1111101 125	None
+left: 0b11111010 250
+right: 0b11111011 251
+curLocation: 0b11111010 250	None
+left: 0b111110100 500
+right: 0b111110101 501
+curLocation: 0b111110100 500	None
+left: 0b1111101000 1000
+right: 0b1111101001 1001
+curLocation: 0b1111101000 1000	None
+left: 0b11111010000 2000
+right: 0b11111010001 2001
+curLocation: 0b11111010000 2000	Some(
+    'q',
+)
+left: 0b111110100000 4000
+right: 0b111110100001 4001
+curLocation: 0b11111010001 2001	None
+left: 0b111110100010 4002
+right: 0b111110100011 4003
+curLocation: 0b111110100010 4002	Some(
+    '3',
+)
+left: 0b1111101000100 8004
+right: 0b1111101000101 8005
+curLocation: 0b111110100011 4003	Some(
+    '4',
+)
+left: 0b1111101000110 8006
+right: 0b1111101000111 8007
+curLocation: 0b1111101001 1001	Some(
+    'H',
+)
+left: 0b11111010010 2002
+right: 0b11111010011 2003
+curLocation: 0b111110101 501	None
+left: 0b1111101010 1002
+right: 0b1111101011 1003
+curLocation: 0b1111101010 1002	Some(
+    'x',
+)
+left: 0b11111010100 2004
+right: 0b11111010101 2005
+curLocation: 0b1111101011 1003	None
+left: 0b11111010110 2006
+right: 0b11111010111 2007
+curLocation: 0b11111010110 2006	None
+left: 0b111110101100 4012
+right: 0b111110101101 4013
+curLocation: 0b111110101100 4012	None
+left: 0b1111101011000 8024
+right: 0b1111101011001 8025
+curLocation: 0b1111101011000 8024	Some(
+    'J',
+)
+left: 0b11111010110000 16048
+right: 0b11111010110001 16049
+curLocation: 0b1111101011001 8025	None
+left: 0b11111010110010 16050
+right: 0b11111010110011 16051
+curLocation: 0b11111010110010 16050	Some(
+    'Q',
+)
+left: 0b111110101100100 32100
+right: 0b111110101100101 32101
+curLocation: 0b11111010110011 16051	None
+left: 0b111110101100110 32102
+right: 0b111110101100111 32103
+curLocation: 0b111110101100110 32102	Some(
+    '[',
+)
+left: 0b1111101011001100 64204
+right: 0b1111101011001101 64205
+curLocation: 0b111110101100111 32103	Some(
+    '$',
+)
+left: 0b1111101011001110 64206
+right: 0b1111101011001111 64207
+curLocation: 0b111110101101 4013	Some(
+    '5',
+)
+left: 0b1111101011010 8026
+right: 0b1111101011011 8027
+curLocation: 0b11111010111 2007	Some(
+    '*',
+)
+left: 0b111110101110 4014
+right: 0b111110101111 4015
+curLocation: 0b11111011 251	None
+left: 0b111110110 502
+right: 0b111110111 503
+curLocation: 0b111110110 502	Some(
+    'A',
+)
+left: 0b1111101100 1004
+right: 0b1111101101 1005
+curLocation: 0b111110111 503	None
+left: 0b1111101110 1006
+right: 0b1111101111 1007
+curLocation: 0b1111101110 1006	Some(
+    'B',
+)
+left: 0b11111011100 2012
+right: 0b11111011101 2013
+curLocation: 0b1111101111 1007	None
+left: 0b11111011110 2014
+right: 0b11111011111 2015
+curLocation: 0b11111011110 2014	None
+left: 0b111110111100 4028
+right: 0b111110111101 4029
+curLocation: 0b111110111100 4028	Some(
+    '6',
+)
+left: 0b1111101111000 8056
+right: 0b1111101111001 8057
+curLocation: 0b111110111101 4029	Some(
+    '/',
+)
+left: 0b1111101111010 8058
+right: 0b1111101111011 8059
+curLocation: 0b11111011111 2015	Some(
+    '0',
+)
+left: 0b111110111110 4030
+right: 0b111110111111 4031
+curLocation: 0b111111 63	Some(
+    'u',
+)
+left: 0b1111110 126
+right: 0b1111111 127
+{
+    ']': 10265,
+    'h': 28,
+    'ê': 20529,
+    'R': 466,
+    'E': 161,
+    'D': 151,
+    'r': 6,
+    'G': 121,
+    '_': 1280,
+    '\u{feff}': 20533,
+    '6': 4028,
+    '2': 3713,
+    '—': 1868,
+    'v': 36,
+    'd': 18,
+    'n': 3,
+    's': 30,
+    'X': 10268,
+    'P': 123,
+    '\'': 3712,
+    '-': 476,
+    '$': 32103,
+    'K': 2565,
+    ';': 1301,
+    't': 11,
+    '1': 321,
+    ' ': 6,
+    'k': 239,
+    '”': 7477,
+    '5': 4013,
+    '*': 2007,
+    '’': 5135,
+    'x': 1002,
+    'y': 19,
+    '7': 2600,
+    'V': 2564,
+    ':': 1281,
+    'I': 74,
+    'f': 42,
+    'c': 14,
+    'u': 63,
+    'p': 38,
+    'M': 483,
+    'l': 8,
+    'e': 0,
+    '%': 20528,
+    '!': 10269,
+    'j': 477,
+    'B': 1006,
+    'b': 124,
+    '@': 20534,
+    '(': 1858,
+    'F': 324,
+    'U': 150,
+    '4': 4003,
+    '/': 4029,
+    '#': 20535,
+    'a': 5,
+    '9': 2601,
+    ')': 1857,
+    'z': 1871,
+    'C': 651,
+    'L': 244,
+    'S': 465,
+    'N': 240,
+    ',': 117,
+    'g': 31,
+    'J': 8024,
+    'Y': 482,
+    'm': 43,
+    '.': 118,
+    '3': 4002,
+    '“': 7476,
+    '8': 3739,
+    'w': 39,
+    '\n': 41,
+    'i': 2,
+    '?': 20532,
+    'W': 1859,
+    '\"': 1870,
+    'q': 2000,
+    'T': 163,
+    'Q': 16050,
+    '[': 32102,
+    'O': 245,
+    '0': 2015,
+    'A': 502,
+    'H': 1001,
+    'o': 8,
+}
