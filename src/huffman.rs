@@ -5,6 +5,13 @@ use std::collections::BinaryHeap;
 use std::collections::HashMap;
 use std::cmp::Reverse; // Used for min heap, this fixed all my problems with all nodes on the left lol
 
+#[derive(Debug)]
+pub struct HuffCode {
+    pub val: char,
+    pub bitlength: u8, // number of bits used
+    pub code: u64,
+    pub codeStr: String
+}
 
 #[derive(Debug, Eq, Clone)]
 pub struct HuffmanNode {
@@ -80,29 +87,35 @@ impl HuffmanNode {
 
 pub fn gen_codes(node: &HuffmanNode) -> HashMap<char, String> {
     let mut outMap: HashMap<char, String> = HashMap::new();
+    let mut outCodes: Vec<HuffCode> = Vec::new();
 
-    recurse_codes(node, &mut outMap, "".to_string());
+    recurse_codes(node, &mut outMap, &mut outCodes, "".to_string(), 0, 0);
+    println!("{:#?}", outCodes);
 
     return outMap;
 }
 
-fn recurse_codes(node: &HuffmanNode, map: &mut HashMap<char, String>, location: String){
+fn recurse_codes(node: &HuffmanNode, map: &mut HashMap<char, String>, codes: &mut Vec<HuffCode>, locationStr: String, location: u64, depth: u8){
 
-    let loc_clone = location.to_owned();
+    let loc_clone = locationStr.to_owned();
     if node.value.is_some() {
         let char_val = node.value.unwrap();
-        map.insert(char_val, loc_clone);
+        map.insert(char_val, loc_clone.clone());
+        codes.push(HuffCode {val: char_val, bitlength: depth, code: location, codeStr: loc_clone.clone()})
     }
 
-    let left_code = format!("{}0", location).to_owned();
-    let right_code = format!("{}1", location).to_owned();
+    let left_code_str = format!("{}0", locationStr).to_owned();
+    let right_code_str = format!("{}1", locationStr).to_owned();
+
+    let left_code = location << 1;
+    let right_code = (location << 1) | 1;
 
     if node.left.is_some() {
-        recurse_codes(&node.left.as_ref().unwrap(), map, left_code)
+        recurse_codes(&node.left.as_ref().unwrap(), map, codes, left_code_str, left_code, depth + 1)
     }
 
     if node.right.is_some() {
-        recurse_codes(&node.right.as_ref().unwrap(), map, right_code);
+        recurse_codes(&node.right.as_ref().unwrap(), map, codes, right_code_str, right_code, depth + 1);
     }
 
 }

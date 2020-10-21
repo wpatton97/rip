@@ -19,14 +19,14 @@ fn main() {
 
 fn readFile(){
 
-    let path = Path::new("./resources/red.txt");
+    let path = Path::new("./resources/english3.txt");
 
     let mut file = File::open(path).expect("Failed to open file");
 
     let mut red = String::new();
     file.read_to_string(&mut red).expect("Couldn't read file");
 
-    let n = huffman::HuffmanNode::new("this is a test of huffman encoding");
+    let n = huffman::HuffmanNode::new(&red);
     let codes = huffman::gen_codes(&n);
 
     for (k, v) in codes {
