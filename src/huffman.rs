@@ -5,7 +5,7 @@ use std::collections::BinaryHeap;
 use std::collections::HashMap;
 use std::cmp::Reverse; // Used for min heap, this fixed all my problems with all nodes on the left lol
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct HuffCode {
     pub val: char,
     pub bitlength: u8, // number of bits used
@@ -85,11 +85,23 @@ impl HuffmanNode {
     }
 }
 
-pub fn gen_codes(node: &HuffmanNode) -> Vec<HuffCode>{
+pub fn gen_codes(root_node: &HuffmanNode) -> Vec<HuffCode>{
     let mut out_codes: Vec<HuffCode> = Vec::new();
 
-    recurse_codes(node, &mut out_codes, "".to_string(), 0, 0);
+    recurse_codes(root_node, &mut out_codes, "".to_string(), 0, 0);
     return out_codes;
+}
+
+pub fn gen_code_map(root_node: &HuffmanNode) -> HashMap<char, HuffCode> {
+    let codes = gen_codes(root_node);
+    let mut out_map = HashMap::new();
+
+    for code in codes {
+        out_map.insert(code.val, code);
+    }
+
+    return out_map;
+
 }
 
 fn recurse_codes(node: &HuffmanNode, codes: &mut Vec<HuffCode>, location_str: String, location: u64, depth: u8){
@@ -114,4 +126,36 @@ fn recurse_codes(node: &HuffmanNode, codes: &mut Vec<HuffCode>, location_str: St
         recurse_codes(&node.right.as_ref().unwrap(), codes, right_code_str, right_code, depth + 1);
     }
 
+}
+
+// STUB!! Does not work yet
+pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u64> {
+
+    let mut output:Vec<u64> = Vec::new();
+
+    while !codes.is_empty() {
+        let mut tmp_u64_buf: u64 = 0;
+        let mut tmp_code_store:Vec<HuffCode> = Vec::new();
+        let mut current_length = 0;
+
+        while current_length <= 64 && !codes.is_empty(){
+            let code = codes.remove(0);
+            current_length += code.bitlength;
+            tmp_code_store.push(code);
+        }
+
+        let mut position = 0;
+        for code in tmp_code_store {
+            tmp_u64_buf = code.code | tmp_u64_buf;
+            position+= code.bitlength;
+            let mut shift = 64 - position;
+            if shift < 0 {
+
+            }
+            tmp_u64_buf = tmp_u64_buf << shift;
+        }
+    }
+
+
+    return vec![0; 5];
 }
