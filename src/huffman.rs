@@ -3,6 +3,7 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::collections::HashMap;
+use std::fmt;
 use std::cmp::Reverse; // Used for min heap, this fixed all my problems with all nodes on the left lol
 
 #[derive(Debug, Clone)]
@@ -11,6 +12,14 @@ pub struct HuffCode {
     pub bitlength: u8, // number of bits used
     pub code: u64,
     pub code_str: String
+}
+
+impl fmt::Display for HuffCode {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let d = self.val.to_string(); 
+        let o = if self.val == '\n' {"\\n"} else {&d[..]};
+        write!(f, "{:5} {:0width$b}:{}", o, self.bitlength, width=self.bitlength as usize)
+    }
 }
 
 #[derive(Debug, Eq, Clone)]
@@ -129,33 +138,88 @@ fn recurse_codes(node: &HuffmanNode, codes: &mut Vec<HuffCode>, location_str: St
 }
 
 // STUB!! Does not work yet
-pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u64> {
+pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u8> {
 
-    let mut output:Vec<u64> = Vec::new();
+    let mut output:Vec<u8> = Vec::new();
+    let mut sum_bits: u32 = 0;
+    let mut num_bytes_needed:u32 = 0;
 
-    while !codes.is_empty() {
-        let mut tmp_u64_buf: u64 = 0;
-        let mut tmp_code_store:Vec<HuffCode> = Vec::new();
-        let mut current_length = 0;
+    for code in codes.clone() {
+        sum_bits += code.bitlength as u32;
+    }
+    num_bytes_needed = (sum_bits / 8) + (if (sum_bits % 8) > 1 {1} else {0});
 
-        while current_length <= 64 && !codes.is_empty(){
-            let code = codes.remove(0);
-            current_length += code.bitlength;
-            tmp_code_store.push(code);
+    let mut leftover = 0;
+    let mut code_index: usize = 0;
+    while output.len() < num_bytes_needed as usize {
+        let mut cur_byte:u8 = 0;
+
+        if leftover > 0 {  // handle overflow from prev iteration.
+            println!("Left: {:02}", leftover);
+            let code_that_went_over = &codes[code_index];
+            cur_byte = 0 | (code_that_went_over.code as u8) << (8 - leftover);
+            code_index += 1;
         }
 
-        let mut position = 0;
-        for code in tmp_code_store {
-            tmp_u64_buf = code.code | tmp_u64_buf;
-            position+= code.bitlength;
-            let mut shift = 64 - position;
-            if shift < 0 {
+        let code = &codes[code_index];
 
+
+
+
+        println!("vec_size: {:02} leftover:{:02} codelen: {:02} sum: {:02}", output.len(), leftover, code.bitlength, leftover + code.bitlength);
+        if code.bitlength + leftover > 8 { // if we cannot fit a whole code
+            cur_byte = cur_byte | ((code.code as u8) >> 8 - leftover);
+            leftover = code.bitlength + leftover - 8;
+            output.push(cur_byte);
+        }
+        else if code.bitlength + leftover == 8 {   // if we can fit exactly one code
+            cur_byte = 0 | code.code as u8;
+            output.push(cur_byte);
+            leftover = 0;
+            code_index += 1;
+        }
+        else {  // if we can fit more than just the current code
+            println!("3rd branch");
+            cur_byte = cur_byte | ((code.code as u8) >> leftover);
+            code_index += 1;
+            let mut nxtcode = &codes[code_index];
+            let space_left: i8 = 8 - code.bitlength as i8;
+            if space_left <= nxtcode.bitlength as i8{   // if we can fit exactly one more code, or not a full extra code
+                println!("3rd sub 1 - nxtcode_length: {}", nxtcode.bitlength);
+                leftover = nxtcode.bitlength - space_left as u8;
+                cur_byte = cur_byte << 8 - space_left;
+                cur_byte = cur_byte | (nxtcode.code as u8 >> leftover);
+                if leftover == 0 { // only if the space left was = nextcode.bitlength
+                    code_index += 1;
+                }
+                output.push(cur_byte);
             }
-            tmp_u64_buf = tmp_u64_buf << shift;
+            else{   // if we can fit a whole code and have space left for a whole extra code, and more
+                cur_byte = 0 | code.code as u8;
+                code_index += 1;
+                let mut total_length = code.bitlength; // set the amount of space we have used
+                let mut space_left: i8 = 8 - code.bitlength as i8;  // set the amount of space we have left
+                while space_left >= 0 { // while we have space left
+                    nxtcode = &codes[code_index];   // grab the current next code
+                    total_length += nxtcode.bitlength;  // add the next code to the total length
+                    space_left = 8 - total_length as i8;    // re-calculate our space left
+
+                    if space_left >= 0 {    // if we have space left *still*
+                        let shifted_code = nxtcode.code >> (total_length - nxtcode.bitlength);
+                        cur_byte = cur_byte | shifted_code as u8;
+                    }
+                    else { // if space left is negative, and we will have leftover
+                        let shifted_code = nxtcode.code >> (total_length - nxtcode.bitlength);
+                        cur_byte = cur_byte | shifted_code as u8;
+                        leftover = space_left.abs() as u8;
+                        output.push(cur_byte);
+                        // should break, but wont need too. if it gets down here, itll be end of loop
+                    }
+                }
+            }
         }
+
     }
 
-
-    return vec![0; 5];
+    return output;
 }

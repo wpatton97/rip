@@ -28,7 +28,7 @@ fn test_huffman(resource_file: &str){
 
     let huffman_tree_root = huffman::HuffmanNode::new(&file_data);
     let code_map = huffman::gen_code_map(&huffman_tree_root);
-    let codes = huffman::gen_codes(&huffman_tree_root);
+    let mut codes = huffman::gen_codes(&huffman_tree_root);
 
     let mut codes_to_write:Vec<huffman::HuffCode> = Vec::new();
 
@@ -37,15 +37,20 @@ fn test_huffman(resource_file: &str){
     }
 
     let mut new_size_bits:u32 = 0;
-    for code in codes_to_write {
+    for code in &codes_to_write[1..20] {
         new_size_bits += code.bitlength as u32;
+        println!("{}", code);
     }
 
-    for code in codes {
-        println!("\"{}\": {:3}\t{}:{}", code.val, code.code, code.code_str, code.bitlength);
-    }
+    // for code in codes.clone() {
+    //     println!("\"{}\": {:3}\t{}:{}", code.val, code.code, code.code_str, code.bitlength);
+    // }
 
-    let bytes:i64 = ((new_size_bits as f64 / 8.0f64) + 0.5f64) as i64;
-    println!("new size: {}bytes", bytes)
+    // let bytes:i64 = ((new_size_bits as f64 / 8.0f64) + 0.5f64) as i64;
+    // println!("new size: {}bytes", bytes);
+
+    // for b in huffman::codes_to_bin(&mut codes){
+    //     println!("{:08b}", b);
+    // }
 
 }
