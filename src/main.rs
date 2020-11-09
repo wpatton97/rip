@@ -24,23 +24,16 @@ fn test_huffman(resource_file: &str){
 
     let mut file_data = String::new();
     file.read_to_string(&mut file_data).expect("Couldn't read file");
-    //file_data = "fuck this shit m8.".to_string();
+
+    
     let huffman_tree_root = huffman::HuffmanNode::new(&file_data);
     let code_map = huffman::gen_code_map(&huffman_tree_root);
-    let mut codes = huffman::gen_codes(&huffman_tree_root);
 
     let mut codes_to_write:Vec<huffman::HuffCode> = Vec::new();
 
     for code_key in file_data.chars() {
         codes_to_write.push(code_map[&code_key].clone())
     }
-
-    // for code in &codes_to_write {
-    //     new_size_bits += code.bitlength as u32;
-    //     println!("{}", code);
-    // }
-
-
 
     let compressed = huffman::codes_to_bin(&mut codes_to_write);
 
