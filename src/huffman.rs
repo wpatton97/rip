@@ -142,7 +142,7 @@ fn recurse_codes(node: &HuffmanNode, codes: &mut Vec<HuffCode>, location_str: St
 // and u8 bitlength, which determines the length of the u64 code we are taking.
 // We are trying to concatenate all of these into a single vector of u8s.
 pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u8> {
-    let mut output:Vec<u8> = Vec::new();
+    let mut output_tmp:Vec<u8> = Vec::new();
     let most_significant = 0x8000000000000000 as u64;
 
     for huffCode in codes.into_iter() {
@@ -153,17 +153,56 @@ pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u8> {
 
         while index < huffCode.bitlength {
             if code & most_significant == most_significant {
-                output.push(1);
+                output_tmp.push(1);
             }
             else {
-                output.push(0);
+                output_tmp.push(0);
             }
             index += 1;
             code = code << 1;
         }
     }
 
-    println!("{:?}", output);
+    let expected_bytes = (output_tmp.len() / 8) + (if output_tmp.len() % 8 > 0 {1} else {0});
+    
+    let mut output:Vec<u8> = Vec::new();
+    let mut index = 0;
+    let mut tmp_byte:u8 = 0;
+
+    let mut last_full_byte = 0;
+    while index < output_tmp.len() {
+        println!("{}", output_tmp[index]);
+        if output_tmp[index] == 1 {
+            tmp_byte = tmp_byte | 1;
+        }
+        else {
+            tmp_byte = tmp_byte & 0b11111110;
+        }
+
+        if (index % 8 == 7 && index != 0) || index + 1 == output_tmp.len() {
+            println!("Pushing!: {:08b} @ i:{}", tmp_byte, index);
+            if index + 1 == output_tmp.len() {
+                tmp_byte = tmp_byte << (8 - (output_tmp.len() % 8))
+            }
+            output.push(tmp_byte);
+            tmp_byte = 0;
+        }
+
+        index += 1;
+
+
+        tmp_byte = tmp_byte << 1;
+    }
+
+    println!("==========\nOutput binary");
+    for b in output.clone() {
+        print!("{:08b}", b);
+    }
+    println!("\ncode_str concat comparison");
+    for c in codes.into_iter() {
+        print!("{}", c.code_str);
+    }
+    println!();
 
     return output;
 }
