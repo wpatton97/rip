@@ -182,7 +182,7 @@ pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u8> {
         if (index % 8 == 7 && index != 0) || index + 1 == output_tmp.len() {
             println!("Pushing!: {:08b} @ i:{}", tmp_byte, index);
             if index + 1 == output_tmp.len() {
-                tmp_byte = tmp_byte << (8 - (output_tmp.len() % 8))
+                tmp_byte = tmp_byte << (8 - (output_tmp.len() % 8));
             }
             output.push(tmp_byte);
             tmp_byte = 0;
