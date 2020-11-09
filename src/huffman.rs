@@ -18,7 +18,7 @@ impl fmt::Display for HuffCode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let d = self.val.to_string(); 
         let o = if self.val == '\n' {"\\n"} else {&d[..]};
-        write!(f, "{:5} {:0width$b}:{}", o, self.bitlength, width=self.bitlength as usize)
+        write!(f, "{:5} {:0width$b}:{}", o, self.code, self.bitlength, width=self.bitlength as usize)
     }
 }
 

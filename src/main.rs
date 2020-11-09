@@ -25,6 +25,7 @@ fn test_huffman(resource_file: &str){
 
     let mut file_data = String::new();
     file.read_to_string(&mut file_data).expect("Couldn't read file");
+    file_data = "this is a test. this needs to be reasonably long so it can pick good chars and codes. yeeeeeeeeeeeeeeeeeeeeeeeeeeet".to_string();
 
     let huffman_tree_root = huffman::HuffmanNode::new(&file_data);
     let code_map = huffman::gen_code_map(&huffman_tree_root);
@@ -36,21 +37,10 @@ fn test_huffman(resource_file: &str){
         codes_to_write.push(code_map[&code_key].clone())
     }
 
-    let mut new_size_bits:u32 = 0;
-    for code in &codes_to_write[1..20] {
-        new_size_bits += code.bitlength as u32;
+    for code in codes_to_write.clone() {
         println!("{}", code);
     }
 
-    // for code in codes.clone() {
-    //     println!("\"{}\": {:3}\t{}:{}", code.val, code.code, code.code_str, code.bitlength);
-    // }
-
-    // let bytes:i64 = ((new_size_bits as f64 / 8.0f64) + 0.5f64) as i64;
-    // println!("new size: {}bytes", bytes);
-
-    // for b in huffman::codes_to_bin(&mut codes){
-    //     println!("{:08b}", b);
-    // }
+    huffman::codes_to_bin(&mut codes_to_write);
 
 }
