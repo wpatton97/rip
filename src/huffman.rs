@@ -162,16 +162,13 @@ pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u8> {
             code = code << 1;
         }
     }
-
-    let expected_bytes = (output_tmp.len() / 8) + (if output_tmp.len() % 8 > 0 {1} else {0});
     
     let mut output:Vec<u8> = Vec::new();
     let mut index = 0;
     let mut tmp_byte:u8 = 0;
 
-    let mut last_full_byte = 0;
     while index < output_tmp.len() {
-        println!("{}", output_tmp[index]);
+        // println!("{}", output_tmp[index]);
         if output_tmp[index] == 1 {
             tmp_byte = tmp_byte | 1;
         }
@@ -179,8 +176,8 @@ pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u8> {
             tmp_byte = tmp_byte & 0b11111110;
         }
 
-        if (index % 8 == 7 && index != 0) || index + 1 == output_tmp.len() {
-            println!("Pushing!: {:08b} @ i:{}", tmp_byte, index);
+        if index % 8 == 7 || index + 1 == output_tmp.len() {
+            // println!("Pushing!: {:08b} @ i:{}", tmp_byte, index);
             if index + 1 == output_tmp.len() {
                 tmp_byte = tmp_byte << (8 - (output_tmp.len() % 8));
             }
@@ -194,15 +191,15 @@ pub fn codes_to_bin(codes: &mut Vec<HuffCode>) -> Vec<u8> {
         tmp_byte = tmp_byte << 1;
     }
 
-    println!("==========\nOutput binary");
-    for b in output.clone() {
-        print!("{:08b}", b);
-    }
-    println!("\ncode_str concat comparison");
-    for c in codes.into_iter() {
-        print!("{}", c.code_str);
-    }
-    println!();
+    // println!("==========\nOutput binary");
+    // for b in output.clone() {
+    //     print!("{:08b}", b);
+    // }
+    // println!("\ncode_str concat comparison");
+    // for c in codes.into_iter() {
+    //     print!("{}", c.code_str);
+    // }
+    // println!();
 
     return output;
 }
